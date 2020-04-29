@@ -7,10 +7,6 @@
 //============================================================================
 
 #include "admissionsystem.h"
-//bool comapre(const center& s1, const center& s2)
-//{
-//	return s1.getName().compare(s2.getName())>0;
-//}
 int main() {
 
 	admissionsystem *a=admissionsystem::get_instance();
