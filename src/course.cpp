@@ -68,8 +68,8 @@ course::course(int id, string name, int fees, string section) {
 
 void course::display() {
 	cout<<"Course name : "<<name
-			<<"\n   Fees : "<<fees
-			<<"\n   Ccat Section : "<<ccat_section<<endl;
+			<<"\nFees : "<<fees
+			<<"\nCcat Section : "<<ccat_section<<endl;
 }
 
 map<string, int>& course::getLcenter() {

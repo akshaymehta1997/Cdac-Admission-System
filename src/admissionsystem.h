@@ -86,6 +86,7 @@ public:
 	void generate_pnr();
 	void display_admitted_students(center*c=NULL);
 	void update_reported_status(center *c);
+	void displaycentercourses();
 
 };
 

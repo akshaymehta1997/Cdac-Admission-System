@@ -48,5 +48,5 @@ eligibility::~eligibility() {
 }
 
 void eligibility::display() {
-	cout<<"---->"<<course_name<<" "<<degree<<" "<<min_percent<<endl;
+	cout<<"\t Degree Required : "<<degree<<"\t Minimum Precentage Required : "<<min_percent<<endl;
 }

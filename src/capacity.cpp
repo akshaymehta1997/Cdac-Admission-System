@@ -51,7 +51,7 @@ capacity::~capacity() {
 }
 
 void capacity::display() {
-	cout<<this->getCenterId()<<" "<<this->getCourseName()<<" "<<this->getMaxCapacity()<<" "<<this->getFilledCapacity()<<endl;
+	cout<<this->getMaxCapacity()<<endl;
 }
 
 const string& capacity::getCourseName() const {

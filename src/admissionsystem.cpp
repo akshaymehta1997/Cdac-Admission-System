@@ -291,11 +291,11 @@ void admissionsystem::displaystudent() {
 		student s=*itr;
 		s.display();
 		itr1=s.getLpref().begin();
-		while(itr1!=s.getLpref().end())
-		{
-			itr1->display();
-			itr1++;
-		}
+		//		while(itr1!=s.getLpref().end())
+		//		{
+		//			itr1->display();
+		//			itr1++;
+		//		}
 		cout<<endl;
 		itr++;
 	}
@@ -305,14 +305,15 @@ void admissionsystem::displaycourses() {
 	for(unsigned i=0; i<l_course.size(); i++) {
 		l_course[i].display();
 		vector<eligibility>::iterator itr1=l_course[i].getvectorEligibility().begin();
+		cout<<"Eligibilities Required for "<<l_course[i].getName()<<" are as follows : "<<endl;
 		while(itr1!=l_course[i].getvectorEligibility().end())
 		{
 			itr1->display();
 			itr1++;
 		}
+		cout<<endl;
 	}
-	cout << endl;
-
+	cout<<endl;
 }
 
 void admissionsystem::displaycenter() {
@@ -322,10 +323,19 @@ void admissionsystem::displaycenter() {
 	for(unsigned i=0; i<l_center.size(); i++) {
 		cout<<"\n"<<i+1<<". ";
 		l_center[i].display();
+		//l_center[i].display_courses();
+	}
+}
+void admissionsystem::displaycentercourses() {
+	//sort(l_center.begin(),l_center.end(),sort_name);
+	cout<<"\nList of Centers are as follows:"
+			<<setw(70)<<setfill('-')<<endl;
+	for(unsigned i=0; i<l_center.size(); i++) {
+		cout<<"\n"<<i+1<<". ";
+		l_center[i].display();
 		l_center[i].display_courses();
 	}
 }
-
 void admissionsystem::first_allocation() {
 	unsigned i,j;
 	for (j = 0; j < 10; j++)
@@ -434,7 +444,7 @@ void admissionsystem::sort_stutents_preference() {
 void admissionsystem::save_prefernce() {
 	ofstream fp;
 	unsigned i,j;
-	fp.open("./alloc1/prefernces.csv");
+	fp.open("./data-files/preferences.csv");
 	if(!fp) {
 		perror("failed to open preference file");
 		return;
@@ -456,7 +466,7 @@ void admissionsystem::save_prefernce() {
 void admissionsystem::save_student() {
 	ofstream fp;
 	unsigned i;
-	fp.open("./alloc1/students.csv");
+	fp.open("./data-files/students.csv");
 	if(!fp) {
 		perror("failed to open students file");
 		return;
@@ -484,7 +494,7 @@ void admissionsystem::save_student() {
 void admissionsystem::save_capacity() {
 	ofstream fp;
 	unsigned i;
-	fp.open("./alloc1/capacity.csv");
+	fp.open("./data-files/capacities.csv");
 	if(!fp) {
 		perror("failed to open capacity file");
 		return;
@@ -550,7 +560,7 @@ int admissionsystem::list_admin_function() {
 			"6.Allocate centers (Round 2)\n "
 			"7List allocated students\n "
 			"8.List paid students\n "
-			"9.List reported (at center) students/n "
+			"9.List reported (at center) students\n "
 			"10.Generate PRN\n "
 			"11.List admitted students (with PRN) for given center\n "
 			"0.Exit\n"
@@ -564,9 +574,9 @@ int admissionsystem::list_center_coordinator_function() {
 	int choice;
 	cout<<"List of function:\n"
 			"1.List Courses\n "
-			"2.List Centers & capacities\n "
-			"3.List Students\n "
-			"4.Update Student Rank\n "
+			"2.List Students\n "
+			"3.Update reported status\n "
+			"4.List admitted students (with PRN)\n "
 			"0.Exit\n"
 			"Enter index of function to be used:\n ";
 	cin>>choice;
@@ -610,6 +620,7 @@ void admissionsystem::student_registration() {
 	}
 	cout<<"Which section exam you are applying for [A/B/C]: ";
 	string section;
+	cin>>section;
 	if(!section.compare("C"))
 		rankC=rankB=rankA=0;
 	else if(!section.compare("B"))
@@ -728,40 +739,47 @@ void admissionsystem::display_allocated_course_center(student* s) {
 	if(s->getAlloPref()==0)
 		cout<<"Your have not been allocated still"<<endl;
 	else{
-		course *c=find_course(s->getAlloCourseName());
+		center *c=find_center(s->getCenterId());
 		cout<<"Allocated center : "<<c->getName()<<endl;
 		cout<<"Allocated course : "<<s->getAlloCourseName()<<endl;
 	}
 }
 
 void admissionsystem::update_payment(student* s) {
-	string status;
-	float payment=s->getPayment();
-	cout<<"Payment Done till now : "<<payment<<endl;
-	if(payment==0)
-	{
+	if(s->getAlloPref()==0)
+		cout<<"Your have not been allocated still"<<endl;
+	else{
+		string status;
+		float payment=s->getPayment();
+		cout<<"Payment Done till now : "<<payment<<endl;
+		if(payment==0)
+		{
 
-		cout<<"Pay your first installment 11800 Rs"<<endl;
-		cout<<"y for yes n for no";
-		cin>>status;
-		if(status.compare("y"))
-		{
-			s->setPayment(11800);
+			cout<<"Pay your first installment 11800 Rs"<<endl;
+			cout<<"y for yes n for no";
+			cin>>status;
+			if(status.compare("y"))
+			{
+				s->setPayment(11800);
+			}
 		}
-	}
-	else if(payment==11800)
-	{
-		course *c=find_course(s->getAlloCourseName());
-		cout<<"Pay your remaining fee "<<c->getFees()-11800<<" Rs."<<endl;
-		cout<<"y for yes n for no";
-		cin>>status;
-		if(status.compare("y"))
+		else if(payment==11800)
 		{
-			s->setPayment(11800);
+			course *c=find_course(s->getAlloCourseName());
+			cout<<"Pay your remaining fee "<<c->getFees()-11800<<" Rs."<<endl;
+			cout<<"y for yes n for no";
+			cin>>status;
+			if(status.compare("y"))
+			{
+				s->setPayment(11800);
+			}
+		}
+		else if(payment>11800)
+		{
+			cout<<"You have paid all your fees"<<endl;
 		}
 	}
 }
-
 bool admissionsystem::admin_login() {
 	cout<<"Enter UserID : ";
 	string u_id,pass;
@@ -774,7 +792,7 @@ bool admissionsystem::admin_login() {
 	}
 	cout<<"Enter Password : ";
 	cin>>pass;
-	if(!pass.compare("admin"))
+	if(pass.compare("admin"))
 	{
 		cout<<"Password entered was wrong"<<endl;
 		return false;
@@ -783,16 +801,23 @@ bool admissionsystem::admin_login() {
 }
 
 void admissionsystem::display_allocated_students() {
+	int i=0;
 	sort(l_student.begin(),l_student.end(),compare_student_admin);
 	vector<student>::const_iterator itr=this->getStudent().cbegin();
 	while(itr!=this->getStudent().cend())
 	{
 		student s=*itr;
 		if(s.getAlloPref()!=0)
-		{	s.display();
-		cout<<endl;
+		{
+			s.display();
+			i++;
+			cout<<endl;
 		}
 		itr++;
+	}
+	if(i==0)
+	{
+		cout<<"Student allocation is not completed"<<endl;
 	}
 }
 
@@ -817,8 +842,10 @@ void admissionsystem::display_reported_students() {
 	{
 		student s=*itr;
 		if(s.getReported()!=0)
+		{
 			s.display();
-		cout<<endl;
+			cout<<endl;
+		}
 		itr++;
 	}
 }
@@ -876,6 +903,7 @@ void admissionsystem::display_center_courses(center *c) {
 		cout<<"\n"<<SrNo++<<". "<<co->getName();
 		itr++;
 	}
+	cout<<endl;
 }
 
 void admissionsystem::disply_center_students(center* c) {
@@ -968,10 +996,10 @@ void admissionsystem::update_reported_status(center* c) {
 	cin>>form_no;
 	for(unsigned i=0; i<l_student.size(); i++){
 		if(l_student[i].getFormNo()==form_no && !c->getId().compare(l_student[i].getCenterId())){
-			l_student[i].display();
 			l_student[i].setReported(1);
+			l_student[i].display();
 			return;
 		}
 	}
-	cout<<"Indicating Student is not allocated to this center.";
+	cout<<"Student is not allocated to this center."<<endl;
 }

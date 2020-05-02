@@ -71,7 +71,7 @@ center::center(string id, string name, string address, string coordinator,
 	this->setPassword(password);
 }
 
- map<string, int>& center::getLcourse()  {
+map<string, int>& center::getLcourse()  {
 	return lcourse;
 }
 
@@ -81,24 +81,14 @@ void center::setLcourse(const map<string, int>& lcourse) {
 
 void center::display() {
 	cout<<"Name : "<<name<<"\n   Address : "<<address<<endl;
-	//	map<string,int>::iterator itr=lcourse.begin();
-//		while(itr!=lcourse.end())
-//		{
-//			cout<<"map["<<itr->first<<"]="<<itr->second<<endl;
-//			admissionsystem *a=admissionsystem::get_instance();
-//			a->getCapacity()[itr->second].display();
-//			itr++;
-//		}
-		//cout<<endl;
 }
 
 void center::display_courses() {
-//		map<string,int>::iterator itr=lcourse.begin();
-//		while(itr!=lcourse.end())
-//		{
-//			cout<<"map["<<itr->first<<"]="<<itr->second<<endl;
-//			admissionsystem *a=admissionsystem::get_instance();
-//			a->getCapacity()[itr->second].display();
-//			itr++;
-//		}
+	map<string,int>::iterator itr=lcourse.begin();
+	while(itr!=lcourse.end())
+	{	admissionsystem *a=admissionsystem::get_instance();
+	cout<<"\tCourse Name : "<<itr->first<<"\tCapacity : ";
+	a->getCapacity()[itr->second].display();
+	itr++;
+	}
 }
